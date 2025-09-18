@@ -54,8 +54,12 @@ export class linkedList {
             this.tail = currentNode;
         }
         this.size--;
-
-
+    }
+    getFirst() {
+        return this.head
+    }
+    getLast() {
+        return this.tail
     }
 }
 

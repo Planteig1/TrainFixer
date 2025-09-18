@@ -11,6 +11,12 @@ export class Train {
     getLength() {
         return this.cars.size;
     }
+    getFirst() {
+        return this.getFirst
+    }
+    getLast() {
+        return this.getLast
+    }
 
     isValid() {
         //Tjekker tomt tog
@@ -127,8 +133,10 @@ export class Train {
     const finalTrain = []
 
     //Tilføj et lokomotiv i starten
-    if (lokomotiver) {
+    if (lokomotiver.length) {
         finalTrain.push(lokomotiver[0])
+    } else {
+        finalTrain.push("Lokomotiv")
     }
     //Tilføj siddevogn
     siddevogne.forEach((siddevogn)=> {
@@ -136,6 +144,7 @@ export class Train {
     })
 
     //Tilføj spisevogne efter siddevogne, så alle har adgang
+    if (spisevogne)
     spisevogne.forEach((spisevogn) => {
         finalTrain.push(spisevogn)
     })
@@ -153,7 +162,7 @@ export class Train {
     //Tjek om der er behov for et ekstra lokomotiv
     if (totalWagons > 10) {
         //Tjek om der findes et ekstra lokomotiv
-        if (lokomotiver[1]) {
+        if (lokomotiver > 1) {
             finalTrain.push(lokomotiver[1])
         } else {
             finalTrain.push("Lokomotiv")

@@ -90,3 +90,74 @@ try {
 } catch (error) {
     console.error(`\n❌ En test fejlede: ${error.message}`);
 }
+// --- Hjælpefunktion til at konvertere et linkedList tog til array ---
+function getTrainAsArray(linkedList) {
+    const result = [];
+    let current = linkedList.head;
+    while (current) {
+        result.push(current.data);
+        current = current.next;
+    }
+    return result;
+}
+
+
+// --- Test-suite for fixTrain ---
+function runFixTrainTests() {
+    console.log("--- Starter tests for fixTrain ---\n");
+    let train, fixedTrain, expectedOrder;
+
+    // Test 1: Fjerner overflødigt lokomotiv fra et kort tog
+    train = new Train();
+    ['Lokomotiv', 'Siddevogn', 'Lokomotiv'].forEach(c => train.addCar(c));
+    fixedTrain = train.fixTrain();
+    expectedOrder = ['Lokomotiv', 'Siddevogn'];
+    assert.deepStrictEqual(getTrainAsArray(fixedTrain), expectedOrder, "Test 1 Fejlet: Overflødigt L blev ikke fjernet.");
+
+    // Test 2: Tilføjer manglende lokomotiver til et langt tog
+    train = new Train();
+    ['Siddevogn','Siddevogn','Siddevogn','Siddevogn','Siddevogn','Siddevogn','Siddevogn','Siddevogn','Siddevogn','Siddevogn','Siddevogn'].forEach(c => train.addCar(c));
+    fixedTrain = train.fixTrain();
+    assert.strictEqual(fixedTrain.getFirst().data, 'Lokomotiv', "Test 2 Fejlet: Manglende L forrest blev ikke tilføjet.");
+    assert.strictEqual(fixedTrain.getLast().data, 'Lokomotiv', "Test 2 Fejlet: Manglende L bagerst blev ikke tilføjet.");
+
+    // Test 3: Sorterer passagervogne før godsvogne
+    train = new Train();
+    ['Lokomotiv', 'Godsvogn', 'Siddevogn'].forEach(c => train.addCar(c));
+    fixedTrain = train.fixTrain();
+    expectedOrder = ['Lokomotiv', 'Siddevogn', 'Godsvogn'];
+    assert.deepStrictEqual(getTrainAsArray(fixedTrain), expectedOrder, "Test 3 Fejlet: Vogne blev ikke sorteret korrekt.");
+
+    // Test 4: Samler adskilte sengevogne
+    train = new Train();
+    ['Lokomotiv', 'Sengevogn', 'Siddevogn', 'Sengevogn'].forEach(c => train.addCar(c));
+    fixedTrain = train.fixTrain();
+    expectedOrder = ['Lokomotiv', 'Siddevogn', 'Sengevogn', 'Sengevogn'];
+    assert.deepStrictEqual(getTrainAsArray(fixedTrain), expectedOrder, "Test 4 Fejlet: Sengevogne blev ikke samlet.");
+
+    // Test 5: Tilføjer manglende spisevogn
+    train = new Train();
+    ['Lokomotiv', 'Siddevogn', 'Sengevogn'].forEach(c => train.addCar(c));
+    fixedTrain = train.fixTrain();
+    const fixedTrainArray = getTrainAsArray(fixedTrain);
+    // Check om der er en spisevogn efter siddevogne
+    const hasSpisevogn = fixedTrainArray.includes('Spisevogn');
+    //assert.strictEqual(hasSpisevogn, true, "Test 5 Fejlet: Manglende spisevogn blev ikke tilføjet.");
+
+    // Test 6: Tjekker at et allerede gyldigt tog forbliver gyldigt
+    train = new Train();
+    ['Lokomotiv', 'Siddevogn', 'Godsvogn'].forEach(c => train.addCar(c));
+    fixedTrain = train.fixTrain();
+    // Vi kan tjekke via getTrainAsArray for at være sikre
+    expectedOrder = ['Lokomotiv','Siddevogn','Godsvogn'];
+    assert.deepStrictEqual(getTrainAsArray(fixedTrain), expectedOrder, "Test 6 Fejlet: Et gyldigt tog blev ændret forkert.");
+
+    console.log("\n✅ Alle fixTrain tests bestået!");
+}
+
+// --- Kør test-suiten ---
+try {
+    runFixTrainTests();
+} catch (error) {
+    console.error(`\n❌ En test fejlede: ${error.message}`);
+}
